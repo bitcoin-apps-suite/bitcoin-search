@@ -4,6 +4,9 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import LayoutClient from "@/components/LayoutClient";
 
+import '../components/mobile/mobile-bwallet.css';
+import MobileShellInit from '../components/mobile/MobileShellInit';
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} style={{ margin: 0, padding: 0, minHeight: "100vh" }}>
+        <MobileShellInit />
         <Providers>
           <LayoutClient>
             {children}

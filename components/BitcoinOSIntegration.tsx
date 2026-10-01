@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { hasCWI, signInWithCWI } from './mobile/cwi'
 
 export default function BitcoinOSIntegration() {
   const [isConnected, setIsConnected] = useState(false)
@@ -8,6 +9,13 @@ export default function BitcoinOSIntegration() {
 
   const handleConnect = async () => {
     try {
+      // Inside bWallet: BRC-100 sign-in via window.CWI (public identity key only)
+      if (hasCWI()) {
+        const user = await signInWithCWI()
+        setIsConnected(true)
+        setAddress(user.publicKey ?? null)
+        return
+      }
       // Simulated connection for now
       setIsConnected(true)
       setAddress('1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa')
