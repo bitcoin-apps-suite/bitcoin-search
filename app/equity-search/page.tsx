@@ -122,7 +122,7 @@ export default function EquitySearch() {
                 <div className="step">
                   <div className="step-number">1</div>
                   <h4>Dual Authentication</h4>
-                  <p>User signs in with Google + HandCash for Bitcoin payments</p>
+                  <p>User signs in and pays with bWalletX or any BRC-100 wallet</p>
                 </div>
                 <div className="step">
                   <div className="step-number">2</div>

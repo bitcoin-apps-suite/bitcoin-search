@@ -3,14 +3,25 @@
 import React, { useState } from 'react'
 import { Search, TrendingUp, DollarSign, Filter, Clock, ArrowRight, Zap, Scale, Activity } from 'lucide-react'
 import Link from 'next/link'
+import ChainResults, { searchChain, type ChainResult } from '@/components/ChainResults'
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchType, setSearchType] = useState('all')
 
-  const handleSearch = (e: React.FormEvent) => {
+  const [result, setResult] = useState<ChainResult | null>(null)
+  const [searching, setSearching] = useState(false)
+
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Searching for:', searchQuery, 'Type:', searchType)
+    if (!searchQuery.trim()) return
+    setSearching(true)
+    try {
+      setResult(await searchChain(searchQuery))
+    } catch {
+      setResult({ kind: 'none', message: 'The chain lookup failed. Try again.' })
+    } finally {
+      setSearching(false)
+    }
   }
 
   return (
@@ -39,7 +50,7 @@ export default function HomePage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search content ranked by economic weight..."
+                  placeholder="Transaction ID, block height or hash, or address"
                   className="w-full px-6 py-4 pr-12 rounded-xl text-white placeholder-gray-400 outline-none transition-all"
                   style={{
                     background: 'rgba(255, 255, 255, 0.1)',
@@ -57,23 +68,6 @@ export default function HomePage() {
                 />
                 <Search className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="px-6 py-4 rounded-xl text-white outline-none cursor-pointer transition-all"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(64, 224, 208, 0.3)',
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <option value="all">All Data</option>
-                <option value="transactions">Transactions</option>
-                <option value="addresses">Addresses</option>
-                <option value="blocks">Blocks</option>
-                <option value="tokens">Tokens</option>
-                <option value="contracts">Smart Contracts</option>
-              </select>
               <button
                 type="submit"
                 className="px-8 py-4 font-medium text-black rounded-xl transition-all"
@@ -92,34 +86,12 @@ export default function HomePage() {
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
-                Search
+                {searching ? 'Searching…' : 'Search'}
               </button>
             </div>
           </form>
+          {result && <ChainResults result={result} />}
 
-          {/* Quick Search Tags */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {['High Value Content', 'Most Paid Results', 'Economic Hotspots', 'Payment Flows'].map((tag) => (
-              <button
-                key={tag}
-                className="px-4 py-2 rounded-full text-sm font-medium text-white transition-all"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(59, 130, 246, 0.2)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(59, 130, 246, 0.2)'
-                  e.currentTarget.style.borderColor = '#3b82f6'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-                  e.currentTarget.style.borderColor = 'rgba(59, 130, 246, 0.2)'
-                }}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* How It Works Section */}

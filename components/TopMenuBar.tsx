@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import WalletAuth from './WalletAuth'
 import { Github, BookOpen, FileText, ExternalLink } from 'lucide-react'
 import './TopMenuBar.css'
 
@@ -644,6 +645,7 @@ export default function TopMenuBar({ onOpenApp }: TopMenuBarProps) {
 
       {/* Right side - Status */}
       <div className="taskbar-status">
+        <WalletAuth />
         <a 
           href="https://github.com/bitcoin-apps-suite/bitcoin-search" 
           target="_blank" 
